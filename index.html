@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PropShot">
+<title>PropShot Media — Shoot Day Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --brand: #1a1a2e;
+    --accent: #e8a838;
+    --accent-light: #fdf3df;
+    --green: #2d6a4f;
+    --green-light: #d8f3dc;
+    --red: #c1121f;
+    --red-light: #ffe5e5;
+    --surface: #ffffff;
+    --surface2: #f7f6f3;
+    --surface3: #eeede9;
+    --text: #1a1a2e;
+    --text2: #5a5a72;
+    --text3: #9a9ab0;
+    --border: rgba(26,26,46,0.10);
+    --border2: rgba(26,26,46,0.18);
+    --progress-h: 56px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { font-size: 16px; }
+  body {
+    font-family: var(--font);
+    background: var(--surface2);
+    color: var(--text);
+    min-height: 100dvh;
+    padding-bottom: 100px;
+  }
+
+  /* HEADER */
+  .app-header {
+    background: var(--brand);
+    color: white;
+    padding: 20px 20px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-header-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .app-logo {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 2px;
+  }
+  .app-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+    line-height: 1.2;
+  }
+  .app-subtitle {
+    font-size: 13px;
+    color: rgba(255,255,255,0.55);
+    margin-top: 2px;
+    font-family: var(--mono);
+  }
+  .new-shoot-btn {
+    background: var(--accent);
+    color: var(--brand);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 4px;
+    transition: opacity 0.15s;
+  }
+  .new-shoot-btn:hover { opacity: 0.85; }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap {
+    background: var(--brand);
+    padding: 0 20px 14px;
+    position: sticky;
+    top: calc(var(--progress-h) + 44px);
+    z-index: 99;
+  }
+  .progress-bar-inner {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  .progress-track {
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-family: var(--mono);
+  }
+  .progress-pct {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* SECTION CARD */
+  .section-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--surface);
+    border-bottom: 1px solid transparent;
+    transition: background 0.15s;
+  }
+  .section-header:hover { background: var(--surface2); }
+  .section-header.open { border-bottom-color: var(--border); }
+  .section-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .section-meta { flex: 1; min-width: 0; }
+  .section-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .section-progress {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono);
+    margin-top: 1px;
+  }
+  .section-badge {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--mono);
+    padding: 3px 8px;
+    border-radius: 99px;
+    background: var(--surface3);
+    color: var(--text2);
+    flex-shrink: 0;
+  }
+  .section-badge.done {
+    background: var(--green-light);
+    color: var(--green);
+  }
+  .section-chevron {
+    color: var(--text3);
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .section-header.open .section-chevron { transform: rotate(180deg); }
+
+  /* ITEMS */
+  .section-items {
+    display: none;
+    flex-direction: column;
+  }
+  .section-items.open { display: flex; }
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+    cursor: pointer;
+  }
+  .item-row:last-child { border-bottom: none; }
+  .item-row:hover { background: var(--surface2); }
+  .item-row.checked { background: var(--green-light); }
+  .item-row.skipped { background: var(--surface2); opacity: 0.6; }
+  .item-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border2);
+    background: white;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    transition: all 0.15s;
+  }
+  .item-row.checked .item-check {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .item-row.skipped .item-check {
+    background: var(--surface3);
+    border-color: var(--surface3);
+  }
+  .check-icon { display: none; color: white; font-size: 13px; }
+  .item-row.checked .check-icon { display: block; }
+  .skip-icon { display: none; color: var(--text3); font-size: 13px; }
+  .item-row.skipped .skip-icon { display: block; }
+  .item-label {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .item-row.checked .item-label { color: var(--text2); text-decoration: line-through; text-decoration-color: var(--green); }
+  .item-row.skipped .item-label { color: var(--text3); }
+  .item-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .item-btn {
+    background: none;
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-family: var(--mono);
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.12s;
+  }
+  .item-btn:hover { background: var(--surface3); }
+  .item-btn.skip-btn { color: var(--text3); }
+  .item-btn.undo-btn { color: var(--accent); border-color: var(--accent); }
+
+  /* SKIP ALL / CHECK ALL ROW */
+  .section-actions {
+    display: none;
+    padding: 10px 16px;
+    gap: 8px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .section-actions.open { display: flex; }
+  .sec-action-btn {
+    background: white;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: var(--font);
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all 0.12s;
+  }
+  .sec-action-btn:hover { background: var(--surface3); }
+
+  /* COMPLETE SCREEN */
+  #complete-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 24px;
+    gap: 16px;
+  }
+  #complete-screen.visible { display: flex; }
+  .complete-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--green-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-bottom: 8px;
+  }
+  .complete-title {
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--brand);
+  }
+  .complete-sub {
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 320px;
+    line-height: 1.6;
+  }
+  .complete-stats {
+    display: flex;
+    gap: 12px;
+    margin: 8px 0;
+  }
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+  .stat-pill strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--brand);
+  }
+  .stat-pill span { color: var(--text3); font-size: 12px; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,30,0.55);
+    z-index: 200;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius) var(--radius) 0 0;
+    width: 100%;
+    max-width: 680px;
+    padding: 24px 20px 40px;
+    animation: slideUp 0.25s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(60px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .modal-sub {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+  }
+  .modal label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 6px;
+    margin-top: 14px;
+  }
+  .modal label:first-of-type { margin-top: 0; }
+  .modal input, .modal select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    background: white;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .modal input:focus, .modal select:focus { border-color: var(--accent); }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+  }
+  .modal-cancel {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    background: none;
+    font-family: var(--font);
+    font-size: 15px;
+    cursor: pointer;
+    color: var(--text2);
+  }
+  .modal-start {
+    flex: 2;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: var(--brand);
+    color: white;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .modal-start:hover { opacity: 0.85; }
+
+  /* UNDO TOAST */
+  .undo-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--brand);
+    color: white;
+    border-radius: 99px;
+    padding: 10px 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 300;
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    white-space: nowrap;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+  .undo-toast.visible { transform: translateX(-50%) translateY(0); }
+  .undo-toast-btn {
+    background: var(--accent);
+    color: var(--brand);
+    border: none;
+    border-radius: 99px;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font);
+  }
+
+  @media (max-width: 480px) {
+    .app-title { font-size: 17px; }
+    .section-name { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-header-inner">
+    <div>
+      <div class="app-logo">PropShot Media</div>
+      <div class="app-title" id="shoot-title">Shoot Day Checklist</div>
+      <div class="app-subtitle" id="shoot-meta">Ready to start a new shoot</div>
+    </div>
+    <button class="new-shoot-btn" onclick="openModal()">+ New Shoot</button>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar-inner">
+    <div class="progress-label">
+      <span id="progress-text">0 of 0 items</span>
+      <span class="progress-pct" id="progress-pct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<div class="main" id="main-content">
+  <div id="checklist-area"></div>
+  <div id="complete-screen" class="hidden">
+    <div class="complete-icon">✓</div>
+    <div class="complete-title">Shoot Complete!</div>
+    <div class="complete-sub" id="complete-sub">All items checked. Great work — time to head back and start editing.</div>
+    <div class="complete-stats">
+      <div class="stat-pill"><strong id="stat-done">0</strong><span>checked</span></div>
+      <div class="stat-pill"><strong id="stat-skip">0</strong><span>skipped</span></div>
+    </div>
+    <button class="modal-start" style="margin-top:8px;border-radius:12px;padding:14px 32px;font-size:16px;" onclick="openModal()">Start Next Shoot</button>
+  </div>
+</div>
+
+<!-- New Shoot Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-title">New Shoot</div>
+    <div class="modal-sub">Enter the property details to get started.</div>
+    <label>Property Address</label>
+    <input type="text" id="m-address" placeholder="1234 Maple Lane, Plano, TX" autocomplete="street-address">
+    <label>Client / Agent Name</label>
+    <input type="text" id="m-agent" placeholder="Jane Smith" autocomplete="name">
+    <label>Shoot Type</label>
+    <select id="m-type">
+      <option>📸 Photo Only</option>
+      <option>🎬 Photo + Video</option>
+      <option>🌀 Photo + 3D Tour</option>
+      <option>🎯 Full Package</option>
+    </select>
+    <label>Date</label>
+    <input type="date" id="m-date">
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-start" onclick="startShoot()">Start Checklist →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Undo Toast -->
+<div class="undo-toast" id="undo-toast">
+  <span id="undo-label">Item unchecked</span>
+  <button class="undo-toast-btn" onclick="performUndo()">Undo</button>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    id: 'gear', name: 'Gear & Equipment', icon: '🎒',
+    items: [
+      'Camera body (fully charged, SD cards formatted)',
+      'Backup SD cards (2+)',
+      'Wide-angle lens (16–35mm or equivalent)',
+      'Standard zoom lens (24–70mm)',
+      'Tripod (with ball head & bubble level)',
+      'Flash / speedlight + extra batteries',
+      'External flash triggers / transmitters',
+      'Tethering cable or wireless tethering setup',
+      'Laptop / tablet for tethered review',
+      'Matterport camera (if 3D tour shoot)',
+      'Matterport tripod + charged batteries',
+      'Gimbal / slider (if video)',
+      'Drone + remote + charged batteries + ND filters',
+      'FAA authorisation confirmed for address',
+      'Microphone (if video walkthrough)',
+      'Extra camera batteries (2–3 sets)',
+      'Lens cleaning kit (blower, cloths)',
+      'Color calibration target / grey card',
+      'Extension cords + power strip',
+      'Grip bag: gaffer tape, clamps, clips',
+      'Reflector / diffuser panel',
+    ]
+  },
+  {
+    id: 'homeprep', name: 'Home Prep on Arrival', icon: '🏠',
+    items: [
+      'Greet agent / homeowner & do walkthrough',
+      'Confirm which rooms are included',
+      'Note any off-limit or staging-only areas',
+      'Turn on ALL interior lights (overhead + lamps)',
+      'Turn off ceiling fans',
+      'Close all toilet lids',
+      'Remove visible trash cans from all rooms',
+      'Clear countertops of clutter (per homeowner)',
+      'Tuck away pet items, pet beds, food bowls',
+      'Remove personal photos if requested',
+      'Straighten rugs & couch cushions throughout',
+      'Open all blinds / curtains for natural light',
+      'Check for "builder beige" walls — adjust WB preset',
+      'Park vehicles off the street / driveway for exterior',
+      'Confirm shoot order with agent before starting',
+    ]
+  },
+  {
+    id: 'exterior', name: 'Exterior Front', icon: '🏡',
+    items: [
+      'Move cars out of driveway',
+      'Remove trash cans, hoses, garden tools',
+      'Straighten front door mat',
+      'Turn on porch lights / sconces',
+      'Wipe down front door & clean porch',
+      'Shoot from street-level & slightly elevated angle',
+      'Bracket 3 exposures (ambient, flash-fill, sky)',
+      'Capture dusk / twilight shot (if applicable)',
+      'Photograph address numbers clearly visible',
+      'Wide establishing shot — full lot if possible',
+      '45-degree angle shots from both corners',
+      'Close-up of front door / entry detail',
+      'Drone overview (400ft, 200ft, 100ft altitudes)',
+      'Drone side lot shots',
+      'Capture street-facing neighbourhood context',
+    ]
+  },
+  {
+    id: 'living', name: 'Living Room', icon: '🛋️',
+    items: [
+      'Fluff & arrange throw pillows symmetrically',
+      'Remove remote controls from view',
+      'Tuck cables & cords behind furniture',
+      'Clear coffee table (leave 1–2 décor items max)',
+      'Turn on all lamps; check for blown bulbs',
+      'Straighten artwork on walls',
+      'Primary wide corner shot (both corners)',
+      'Secondary mid-room shot toward windows',
+      'Fireplace detail shot (if present)',
+      'Built-in / bookshelf detail shot (if present)',
+      'Lifestyle detail shot (vase, books, décor)',
+      'Capture natural light streaming if available',
+    ]
+  },
+  {
+    id: 'kitchen', name: 'Kitchen', icon: '🍳',
+    items: [
+      'Clear all countertops — leave only curated items',
+      'Remove dish racks, sponges, soap dispensers',
+      'Clean stovetop burners of visible grime',
+      'Turn on under-cabinet lights (if available)',
+      'Remove magnets & papers from refrigerator',
+      'Tuck away small appliances (toaster, blender)',
+      'Open cabinets slightly for magazine-style look (optional)',
+      'Primary wide corner shot (both corners)',
+      'Island shot (if island present)',
+      'Appliance detail shot (range, fridge)',
+      'Backsplash detail shot',
+      'Counter vignette / styled shot',
+      'Cabinet & hardware detail (if high-end)',
+    ]
+  },
+  {
+    id: 'dining', name: 'Dining Room', icon: '🍽️',
+    items: [
+      'Set table or leave clean — confirm with agent',
+      'Push all chairs in evenly',
+      'Add simple centrepiece if none present (optional)',
+      'Turn on chandelier / pendant light',
+      'Straighten artwork or mirrors on walls',
+      'Primary wide shot showing full table',
+      'Angled shot highlighting chandelier',
+      'Detail shot of table setting or décor',
+    ]
+  },
+  {
+    id: 'primary-bed', name: 'Primary Bedroom', icon: '🛏️',
+    items: [
+      'Make bed — crisp and symmetrical',
+      'Fluff & arrange all pillows',
+      'Clear nightstands (1–2 items max each)',
+      'Remove personal items & medications',
+      'Close closet doors unless styling open',
+      'Hide phone chargers & cables',
+      'Turn on bedside lamps',
+      'Primary wide shot from doorway',
+      'Shot from both corners of room',
+      'Bed detail / headboard shot',
+      'Walk-in closet shot (if present & staged)',
+      'Window view shot (if scenic)',
+    ]
+  },
+  {
+    id: 'bedrooms', name: 'Bedrooms 2 & 3', icon: '🛏️',
+    items: [
+      'Make all beds; tidy and symmetrical',
+      'Clear nightstands & dressers of clutter',
+      'Remove personal photos if requested',
+      'Close closet doors',
+      'Turn on lamps / overhead lights',
+      'Bedroom 2 — wide shot from doorway',
+      'Bedroom 2 — angled corner shot',
+      'Bedroom 3 — wide shot from doorway',
+      'Bedroom 3 — angled corner shot',
+      'Office / bonus room wide shot (if applicable)',
+    ]
+  },
+  {
+    id: 'primary-bath', name: 'Primary Bathroom', icon: '🚿',
+    items: [
+      'Remove all personal toiletries from counters',
+      'Hide trash can',
+      'Close toilet lid',
+      'Hang matching, fresh-looking towels',
+      'Remove soap scum & water spots from glass',
+      'Clean mirrors — no streaks',
+      'Turn on all vanity lights',
+      'Add simple staging items (candle, plant) if desired',
+      'Primary wide shot from doorway',
+      'Vanity / double sink detail shot',
+      'Shower / tub detail shot',
+      'Toilet area shot (if separate)',
+    ]
+  },
+  {
+    id: 'second-bath', name: 'Second Bathroom', icon: '🚿',
+    items: [
+      'Clear countertops of all personal items',
+      'Hide trash can',
+      'Close toilet lid',
+      'Hang clean towels',
+      'Clean mirror & fixtures',
+      'Turn on vanity lights',
+      'Wide shot from doorway',
+      'Vanity / sink detail shot',
+    ]
+  },
+  {
+    id: 'backyard', name: 'Backyard & Outdoor', icon: '🌿',
+    items: [
+      'Remove hoses, garden tools, kids\' toys',
+      'Arrange patio furniture symmetrically',
+      'Add cushions to patio chairs (if available)',
+      'Clear pool of leaves / debris (if present)',
+      'Turn on pool lights (if dusk shoot)',
+      'Wipe down BBQ grill (if visible)',
+      'Sweep patio / deck surface',
+      'Primary wide shot from back of house',
+      'Shot from patio looking toward house',
+      'Pool or spa detail shot (if present)',
+      'Pergola / outdoor structure detail (if present)',
+      'Garden / landscape detail shot',
+      'Drone backyard overhead shot',
+    ]
+  },
+  {
+    id: 'postpro', name: 'Post-Production', icon: '💻',
+    items: [
+      'Import & back up RAW files immediately',
+      'Cull selects in Lightroom / Capture One',
+      'Apply base lens correction profile',
+      'Colour grade — consistent WB across all rooms',
+      'Sky replacement (exterior shots)',
+      'Flash / ambient blend for interior shots',
+      'Straighten & correct verticals (keystone)',
+      'Spot-heal dust spots, distractions',
+      'Export JPEGs — MLS spec (max 10MB, 3000px long edge)',
+      'Export full-res versions for print',
+      'Edit video walkthrough in Premiere / FCPX',
+      'Add music, titles, colour grade to video',
+      'Export video — 1080p H.264 + 4K master',
+      'Upload Matterport 3D tour & get share link',
+      'Deliver assets via Google Drive / Dropbox folder',
+      'Send delivery notification to agent',
+    ]
+  },
+  {
+    id: 'sales', name: 'Sales & Follow-up', icon: '📬',
+    items: [
+      'Send invoice to agent within 24 hrs',
+      'Request Google review (template text)',
+      'Follow up if no review after 3 days',
+      'Add shoot to portfolio (select best 3–5 images)',
+      'Post on Instagram / social (with agent tag)',
+      'Save client details to CRM / contacts',
+      'Note any feedback or special requests for next time',
+      'Send thank-you message to agent',
+      'Check if property needs drone re-shoot after listing',
+    ]
+  },
+];
+
+// State
+let state = {
+  address: '',
+  agent: '',
+  type: '',
+  date: '',
+  items: {},       // itemKey → 'checked' | 'skipped' | null
+  openSections: new Set(['gear']),
+};
+
+let lastAction = null; // for undo
+let undoTimer = null;
+
+function itemKey(sId, idx) { return `${sId}::${idx}`; }
+
+function initState() {
+  state.items = {};
+  SECTIONS.forEach(s => {
+    s.items.forEach((_, i) => { state.items[itemKey(s.id, i)] = null; });
+  });
+}
+
+function getItemState(sId, idx) { return state.items[itemKey(sId, idx)] || null; }
+function setItemState(sId, idx, val) { state.items[itemKey(sId, idx)] = val; }
+
+function totalItems() { return Object.keys(state.items).length; }
+function doneItems() { return Object.values(state.items).filter(v => v === 'checked').length; }
+function skippedItems() { return Object.values(state.items).filter(v => v === 'skipped').length; }
+function resolvedItems() { return Object.values(state.items).filter(v => v !== null).length; }
+
+function updateProgress() {
+  const total = totalItems();
+  const resolved = resolvedItems();
+  const done = doneItems();
+  const pct = total ? Math.round(resolved / total * 100) : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `${resolved} of ${total} items`;
+  document.getElementById('progress-pct').textContent = pct + '%';
+
+  if (total > 0 && resolved === total) {
+    showComplete();
+  }
+}
+
+function showComplete() {
+  document.getElementById('checklist-area').style.display = 'none';
+  const cs = document.getElementById('complete-screen');
+  cs.style.display = 'flex';
+  cs.className = 'visible';
+  document.getElementById('stat-done').textContent = doneItems();
+  document.getElementById('stat-skip').textContent = skippedItems();
+  const addr = state.address || 'the property';
+  document.getElementById('complete-sub').textContent =
+    `All items resolved for ${addr}. Time to head back and start editing!`;
+}
+
+function hideComplete() {
+  document.getElementById('checklist-area').style.display = '';
+  const cs = document.getElementById('complete-screen');
+  cs.style.display = 'none';
+}
+
+function renderAll() {
+  const area = document.getElementById('checklist-area');
+  area.innerHTML = '';
+  SECTIONS.forEach(sec => {
+    area.appendChild(buildSection(sec));
+  });
+  updateProgress();
+}
+
+function buildSection(sec) {
+  const total = sec.items.length;
+  const checked = sec.items.filter((_, i) => getItemState(sec.id, i) === 'checked').length;
+  const allResolved = sec.items.every((_, i) => getItemState(sec.id, i) !== null);
+  const isOpen = state.openSections.has(sec.id);
+
+  const card = document.createElement('div');
+  card.className = 'section-card';
+  card.id = 'sec-' + sec.id;
+
+  // Header
+  const hdr = document.createElement('div');
+  hdr.className = 'section-header' + (isOpen ? ' open' : '');
+  hdr.onclick = () => toggleSection(sec.id);
+  hdr.innerHTML = `
+    <div class="section-icon">${sec.icon}</div>
+    <div class="section-meta">
+      <div class="section-name">${sec.name}</div>
+      <div class="section-progress">${checked}/${total} checked</div>
+    </div>
+    <div class="section-badge${allResolved ? ' done' : ''}">${allResolved ? '✓ done' : checked + '/' + total}</div>
+    <div class="section-chevron">⌄</div>
+  `;
+  card.appendChild(hdr);
+
+  // Section quick-actions
+  const acts = document.createElement('div');
+  acts.className = 'section-actions' + (isOpen ? ' open' : '');
+  acts.innerHTML = `
+    <button class="sec-action-btn" onclick="checkAllSection('${sec.id}', event)">Check all</button>
+    <button class="sec-action-btn" onclick="skipAllSection('${sec.id}', event)">Skip all</button>
+    <button class="sec-action-btn" onclick="resetSection('${sec.id}', event)">Reset</button>
+  `;
+  card.appendChild(acts);
+
+  // Items
+  const itemsWrap = document.createElement('div');
+  itemsWrap.className = 'section-items' + (isOpen ? ' open' : '');
+
+  sec.items.forEach((label, i) => {
+    const st = getItemState(sec.id, i);
+    const row = document.createElement('div');
+    row.className = 'item-row' + (st === 'checked' ? ' checked' : st === 'skipped' ? ' skipped' : '');
+    row.id = `item-${sec.id}-${i}`;
+    row.onclick = (e) => {
+      if (e.target.classList.contains('item-btn')) return;
+      toggleCheck(sec.id, i);
+    };
+
+    let actionsHTML = '';
+    if (st === null) {
+      actionsHTML = `<button class="item-btn skip-btn" onclick="skipItem('${sec.id}', ${i}, event)">skip</button>`;
+    } else {
+      actionsHTML = `<button class="item-btn undo-btn" onclick="undoItem('${sec.id}', ${i}, event)">undo</button>`;
+    }
+
+    row.innerHTML = `
+      <div class="item-check">
+        <span class="check-icon">✓</span>
+        <span class="skip-icon">–</span>
+      </div>
+      <div class="item-label">${label}</div>
+      <div class="item-actions">${actionsHTML}</div>
+    `;
+    itemsWrap.appendChild(row);
+  });
+
+  card.appendChild(itemsWrap);
+  return card;
+}
+
+function toggleSection(id) {
+  if (state.openSections.has(id)) {
+    state.openSections.delete(id);
+  } else {
+    state.openSections.add(id);
+  }
+  refreshSection(id);
+}
+
+function refreshSection(id) {
+  const sec = SECTIONS.find(s => s.id === id);
+  const old = document.getElementById('sec-' + id);
+  if (!old) return;
+  const fresh = buildSection(sec);
+  old.parentNode.replaceChild(fresh, old);
+  updateProgress();
+}
+
+function refreshAllSections() {
+  SECTIONS.forEach(s => refreshSection(s.id));
+}
+
+function toggleCheck(sId, idx) {
+  const cur = getItemState(sId, idx);
+  if (cur === 'checked') {
+    setItemState(sId, idx, null);
+  } else {
+    const prev = cur;
+    setItemState(sId, idx, 'checked');
+    showUndoToast(sId, idx, prev, 'checked');
+  }
+  refreshSection(sId);
+  updateProgress();
+}
+
+function skipItem(sId, idx, e) {
+  e.stopPropagation();
+  const prev = getItemState(sId, idx);
+  setItemState(sId, idx, 'skipped');
+  showUndoToast(sId, idx, prev, 'skipped');
+  refreshSection(sId);
+  updateProgress();
+}
+
+function undoItem(sId, idx, e) {
+  e.stopPropagation();
+  setItemState(sId, idx, null);
+  refreshSection(sId);
+  updateProgress();
+}
+
+function checkAllSection(id, e) {
+  e.stopPropagation();
+  const sec = SECTIONS.find(s => s.id === id);
+  sec.items.forEach((_, i) => setItemState(id, i, 'checked'));
+  refreshSection(id);
+  updateProgress();
+}
+
+function skipAllSection(id, e) {
+  e.stopPropagation();
+  const sec = SECTIONS.find(s => s.id === id);
+  sec.items.forEach((_, i) => setItemState(id, i, 'skipped'));
+  refreshSection(id);
+  updateProgress();
+}
+
+function resetSection(id, e) {
+  e.stopPropagation();
+  const sec = SECTIONS.find(s => s.id === id);
+  sec.items.forEach((_, i) => setItemState(id, i, null));
+  refreshSection(id);
+  updateProgress();
+}
+
+// Undo Toast
+function showUndoToast(sId, idx, prevState, action) {
+  lastAction = { sId, idx, prevState };
+  const label = action === 'checked' ? 'Item checked' : 'Item skipped';
+  document.getElementById('undo-label').textContent = label;
+  const toast = document.getElementById('undo-toast');
+  toast.classList.add('visible');
+  if (undoTimer) clearTimeout(undoTimer);
+  undoTimer = setTimeout(() => {
+    toast.classList.remove('visible');
+    lastAction = null;
+  }, 3500);
+}
+
+function performUndo() {
+  if (!lastAction) return;
+  const { sId, idx, prevState } = lastAction;
+  setItemState(sId, idx, prevState);
+  refreshSection(sId);
+  updateProgress();
+  document.getElementById('undo-toast').classList.remove('visible');
+  lastAction = null;
+  if (undoTimer) clearTimeout(undoTimer);
+}
+
+// Modal
+function openModal() {
+  document.getElementById('modal-overlay').classList.add('open');
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('m-date').value = today;
+  document.getElementById('m-address').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function startShoot() {
+  const address = document.getElementById('m-address').value.trim() || 'Untitled Property';
+  const agent = document.getElementById('m-agent').value.trim();
+  const type = document.getElementById('m-type').value;
+  const date = document.getElementById('m-date').value;
+
+  state.address = address;
+  state.agent = agent;
+  state.type = type;
+  state.date = date;
+
+  document.getElementById('shoot-title').textContent = address;
+  const agentStr = agent ? ` · ${agent}` : '';
+  const dateStr = date ? ` · ${formatDate(date)}` : '';
+  document.getElementById('shoot-meta').textContent = type + agentStr + dateStr;
+
+  initState();
+  state.openSections = new Set(['gear']);
+  closeModal();
+  hideComplete();
+  renderAll();
+}
+
+function formatDate(d) {
+  if (!d) return '';
+  const [y, m, day] = d.split('-');
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[+m-1]} ${+day}`;
+}
+
+// Init
+initState();
+renderAll();
+</script>
+</body>
+</html>
